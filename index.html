@@ -1,430 +1,429 @@
-<h1>&lt;!DOCTYPE html&gt; 
-  <br>&lt;html lang="es"&gt; 
-  <br>&lt;head&gt; 
-  <br>&lt;meta charset="UTF-8"&gt; 
-  <br>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt; 
-  <br>&lt;title&gt;Consulta de Audiencias - CSJ Tacna&lt;/title&gt; 
-  <br>&lt;style&gt; 
-  <br>/* ============================================ 
-  <br>ESTILOS DE LA PÁGINA 
-  <br>============================================ */ 
-  <br>
-  <br>* { 
-  <br>margin: 0; 
-  <br>padding: 0; 
-  <br>box-sizing: border-box; 
-  <br>} 
-  <br>
-  <br>body { 
-  <br>font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-  <br>background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-  <br>min-height: 100vh; 
-  <br>padding: 20px; 
-  <br>display: flex; 
-  <br>justify-content: center; 
-  <br>align-items: center; 
-  <br>} 
-  <br>
-  <br>.container { 
-  <br>background: white; 
-  <br>border-radius: 20px; 
-  <br>box-shadow: 0 20px 60px rgba(0,0,0,0.3); 
-  <br>max-width: 800px; 
-  <br>width: 100%; 
-  <br>padding: 40px; 
-  <br>} 
-  <br>
-  <br>.header { 
-  <br>text-align: center; 
-  <br>margin-bottom: 30px; 
-  <br>} 
-  <br>
-  <br>.header h1 { 
-  <br>color: #333; 
-  <br>font-size: 28px; 
-  <br>margin-bottom: 10px; 
-  <br>} 
-  <br>
-  <br>.header p { 
-  <br>color: #666; 
-  <br>font-size: 14px; 
-  <br>} 
-  <br>
-  <br>.search-box { 
-  <br>display: flex; 
-  <br>gap: 10px; 
-  <br>margin-bottom: 30px; 
-  <br>} 
-  <br>
-  <br>#expediente-input { 
-  <br>flex: 1; 
-  <br>padding: 15px 20px; 
-  <br>border: 2px solid #e0e0e0; 
-  <br>border-radius: 10px; 
-  <br>font-size: 16px; 
-  <br>transition: all 0.3s; 
-  <br>} 
-  <br>
-  <br>#expediente-input:focus { 
-  <br>outline: none; 
-  <br>border-color: #667eea; 
-  <br>box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); 
-  <br>} 
-  <br>
-  <br>#buscar-btn { 
-  <br>padding: 15px 30px; 
-  <br>background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-  <br>color: white; 
-  <br>border: none; 
-  <br>border-radius: 10px; 
-  <br>font-size: 16px; 
-  <br>font-weight: bold; 
-  <br>cursor: pointer; 
-  <br>transition: transform 0.2s; 
-  <br>} 
-  <br>
-  <br>#buscar-btn:hover { 
-  <br>transform: translateY(-2px); 
-  <br>} 
-  <br>
-  <br>#buscar-btn:active { 
-  <br>transform: translateY(0); 
-  <br>} 
-  <br>
-  <br>#buscar-btn:disabled { 
-  <br>opacity: 0.6; 
-  <br>cursor: not-allowed; 
-  <br>} 
-  <br>
-  <br>.loading { 
-  <br>text-align: center; 
-  <br>padding: 30px; 
-  <br>display: none; 
-  <br>} 
-  <br>
-  <br>.loading.active { 
-  <br>display: block; 
-  <br>} 
-  <br>
-  <br>.spinner { 
-  <br>border: 4px solid #f3f3f3; 
-  <br>border-top: 4px solid #667eea; 
-  <br>border-radius: 50%; 
-  <br>width: 40px; 
-  <br>height: 40px; 
-  <br>animation: spin 1s linear infinite; 
-  <br>margin: 0 auto 15px; 
-  <br>} 
-  <br>
-  <br>@keyframes spin { 
-  <br>0% { transform: rotate(0deg); } 
-  <br>100% { transform: rotate(360deg); } 
-  <br>} 
-  <br>
-  <br>.results { 
-  <br>display: none; 
-  <br>} 
-  <br>
-  <br>.results.active { 
-  <br>display: block; 
-  <br>} 
-  <br>
-  <br>.error { 
-  <br>background: #fee; 
-  <br>border-left: 4px solid #f44; 
-  <br>padding: 20px; 
-  <br>border-radius: 10px; 
-  <br>color: #c00; 
-  <br>} 
-  <br>
-  <br>.success-header { 
-  <br>background: #e8f5e9; 
-  <br>border-left: 4px solid #4caf50; 
-  <br>padding: 15px 20px; 
-  <br>border-radius: 10px; 
-  <br>margin-bottom: 20px; 
-  <br>} 
-  <br>
-  <br>.success-header h3 { 
-  <br>color: #2e7d32; 
-  <br>margin-bottom: 5px; 
-  <br>} 
-  <br>
-  <br>.audiencia-card { 
-  <br>background: #f9f9f9; 
-  <br>border-radius: 10px; 
-  <br>padding: 20px; 
-  <br>margin-bottom: 15px; 
-  <br>border-left: 4px solid #667eea; 
-  <br>transition: transform 0.2s; 
-  <br>} 
-  <br>
-  <br>.audiencia-card:hover { 
-  <br>transform: translateX(5px); 
-  <br>box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
-  <br>} 
-  <br>
-  <br>.audiencia-card h4 { 
-  <br>color: #333; 
-  <br>margin-bottom: 15px; 
-  <br>font-size: 18px; 
-  <br>} 
-  <br>
-  <br>.audiencia-info { 
-  <br>display: grid; 
-  <br>gap: 10px; 
-  <br>} 
-  <br>
-  <br>.info-row { 
-  <br>display: flex; 
-  <br>align-items: start; 
-  <br>gap: 10px; 
-  <br>} 
-  <br>
-  <br>.info-icon { 
-  <br>font-size: 20px; 
-  <br>width: 25px; 
-  <br>} 
-  <br>
-  <br>.info-content { 
-  <br>flex: 1; 
-  <br>} 
-  <br>
-  <br>.info-label { 
-  <br>font-size: 12px; 
-  <br>color: #666; 
-  <br>text-transform: uppercase; 
-  <br>letter-spacing: 0.5px; 
-  <br>} 
-  <br>
-  <br>.info-value { 
-  <br>color: #333; 
-  <br>font-size: 15px; 
-  <br>margin-top: 3px; 
-  <br>} 
-  <br>
-  <br>.link-meet { 
-  <br>background: #667eea; 
-  <br>color: white; 
-  <br>padding: 10px 20px; 
-  <br>border-radius: 8px; 
-  <br>text-decoration: none; 
-  <br>display: inline-block; 
-  <br>margin-top: 10px; 
-  <br>font-weight: bold; 
-  <br>transition: background 0.3s; 
-  <br>} 
-  <br>
-  <br>.link-meet:hover { 
-  <br>background: #5568d3; 
-  <br>} 
-  <br>
-  <br>.example { 
-  <br>background: #fff8e1; 
-  <br>border-left: 4px solid #ffc107; 
-  <br>padding: 15px; 
-  <br>border-radius: 8px; 
-  <br>margin-top: 20px; 
-  <br>font-size: 14px; 
-  <br>} 
-  <br>
-  <br>@media (max-width: 600px) { 
-  <br>.container { 
-  <br>padding: 20px; 
-  <br>} 
-  <br>
-  <br>.search-box { 
-  <br>flex-direction: column; 
-  <br>} 
-  <br>
-  <br>#buscar-btn { 
-  <br>width: 100%; 
-  <br>} 
-  <br>} 
-  <br>&lt;/style&gt; 
-  <br>&lt;/head&gt; 
-  <br>&lt;body&gt; 
-  <br>&lt;div class="container"&gt; 
-  <br>&lt;!-- ENCABEZADO --&gt; 
-  <br>&lt;div class="header"&gt; 
-  <br>&lt;h1&gt;🏛️ Consulta de Audiencias&lt;/h1&gt; 
-  <br>&lt;p&gt;Corte Superior de Justicia de Tacna - Módulo Penal&lt;/p&gt; 
-  <br>&lt;/div&gt; 
-  <br>
-  <br>&lt;!-- BUSCADOR --&gt; 
-  <br>&lt;div class="search-box"&gt; 
-  <br>&lt;input 
-  <br>type="text" 
-  <br>id="expediente-input" 
-  <br>placeholder="Ingresa el número de expediente (Ej: 1480-2023-13)" 
-  <br>onkeypress="if(event.key === 'Enter') buscarExpediente()" 
-  <br>&gt; 
-  <br>&lt;button id="buscar-btn" onclick="buscarExpediente()"&gt; 
-  <br>🔍 Buscar 
-  <br>&lt;/button&gt; 
-  <br>&lt;/div&gt; 
-  <br>
-  <br>&lt;!-- INDICADOR DE CARGA --&gt; 
-  <br>&lt;div class="loading" id="loading"&gt; 
-  <br>&lt;div class="spinner"&gt;&lt;/div&gt; 
-  <br>&lt;p&gt;Buscando en los calendarios...&lt;/p&gt; 
-  <br>&lt;/div&gt; 
-  <br>
-  <br>&lt;!-- RESULTADOS --&gt; 
-  <br>&lt;div class="results" id="results"&gt; 
-  <br>&lt;!-- Aquí se mostrarán los resultados --&gt; 
-  <br>&lt;/div&gt; 
-  <br>
-  <br>&lt;!-- EJEMPLOS --&gt; 
-  <br>&lt;div class="example"&gt; 
-  <br>&lt;strong&gt;💡 Formatos aceptados:&lt;/strong&gt;&lt;br&gt; 
-  <br>• 1480-2023-13&lt;br&gt; 
-  <br>• EXP.232-2016-55&lt;br&gt; 
-  <br>• 0083-2018-12&lt;br&gt; 
-  <br>• 3433-2024-3 
-  <br>&lt;/div&gt; 
-  <br>&lt;/div&gt; 
-  <br>
-  <br>&lt;script&gt; 
-  <br>/* ============================================ 
-  <br>CONFIGURACIÓN - ¡IMPORTANTE! 
-  <br>============================================ */ 
-  <br>
-  <br>// 🔧 PEGA AQUÍ LA URL DE TU WEB APP DE GOOGLE APPS SCRIPT 
-  <br>const API_URL = 'https://script.google.com/macros/s/AKfycbyWT9rCJZ1oF72T-Ej252Kor9KTTGoNhal3PGjZKDZNRueAX_U_RtjrEC6owaXPLLxhrw/exec'; 
-  <br>
-  <br>/* ============================================ 
-  <br>FUNCIÓN PRINCIPAL: BUSCAR EXPEDIENTE 
-  <br>============================================ */ 
-  <br>
-  <br>async function buscarExpediente() { 
-  <br>// Obtiene el valor del input 
-  <br>const expediente = document.getElementById('expediente-input').value.trim(); 
-  <br>
-  <br>// Valida que no esté vacío 
-  <br>if (!expediente) { 
-  <br>mostrarError('⚠️ Por favor ingresa un número de expediente'); 
-  <br>return; 
-  <br>} 
-  <br>
-  <br>// Muestra loading, oculta resultados 
-  <br>document.getElementById('loading').classList.add('active'); 
-  <br>document.getElementById('results').classList.remove('active'); 
-  <br>document.getElementById('buscar-btn').disabled = true; 
-  <br>
-  <br>try { 
-  <br>// Hace la petición a la API 
-  <br>const response = await fetch(`${API_URL}?expediente=${encodeURIComponent(expediente)}`); 
-  <br>const data = await response.json(); 
-  <br>
-  <br>// Oculta loading 
-  <br>document.getElementById('loading').classList.remove('active'); 
-  <br>document.getElementById('buscar-btn').disabled = false; 
-  <br>
-  <br>// Muestra resultados 
-  <br>if (data.error) { 
-  <br>mostrarError(data.mensaje, data.sugerencia); 
-  <br>} else { 
-  <br>mostrarResultados(data); 
-  <br>} 
-  <br>
-  <br>} catch (error) { 
-  <br>document.getElementById('loading').classList.remove('active'); 
-  <br>document.getElementById('buscar-btn').disabled = false; 
-  <br>mostrarError('❌ Error de conexión. Verifica tu internet e intenta nuevamente.'); 
-  <br>console.error('Error:', error); 
-  <br>} 
-  <br>} 
-  <br>
-  <br>/* ============================================ 
-  <br>FUNCIÓN: MOSTRAR ERROR 
-  <br>============================================ */ 
-  <br>
-  <br>function mostrarError(mensaje, sugerencia = '') { 
-  <br>const resultsDiv = document.getElementById('results'); 
-  <br>resultsDiv.innerHTML = ` 
-  <br>&lt;div class="error"&gt; 
-  <br>&lt;strong&gt;${mensaje}&lt;/strong&gt; 
-  <br>${sugerencia ? `&lt;p style="margin-top: 10px; font-size: 14px;"&gt;${sugerencia}&lt;/p&gt;` : ''} 
-  <br>&lt;/div&gt; 
-  <br>`; 
-  <br>resultsDiv.classList.add('active'); 
-  <br>} 
-  <br>
-  <br>/* ============================================ 
-  <br>FUNCIÓN: MOSTRAR RESULTADOS 
-  <br>============================================ */ 
-  <br>
-  <br>function mostrarResultados(data) { 
-  <br>const resultsDiv = document.getElementById('results'); 
-  <br>
-  <br>let html = ` 
-  <br>&lt;div class="success-header"&gt; 
-  <br>&lt;h3&gt;✅ Expediente: ${data.expediente}&lt;/h3&gt; 
-  <br>&lt;p&gt;${data.total} audiencia(s) encontrada(s) en los próximos 30 días&lt;/p&gt; 
-  <br>&lt;/div&gt; 
-  <br>`; 
-  <br>
-  <br>// Genera tarjetas para cada audiencia 
-  <br>data.audiencias.forEach((audiencia, index) =&gt; { 
-  <br>html += ` 
-  <br>&lt;div class="audiencia-card"&gt; 
-  <br>&lt;h4&gt;Audiencia ${index + 1}&lt;/h4&gt; 
-  <br>&lt;div class="audiencia-info"&gt; 
-  <br>&lt;div class="info-row"&gt; 
-  <br>&lt;div class="info-icon"&gt;📋&lt;/div&gt; 
-  <br>&lt;div class="info-content"&gt; 
-  <br>&lt;div class="info-label"&gt;Expediente&lt;/div&gt; 
-  <br>&lt;div class="info-value"&gt;${audiencia.expediente}&lt;/div&gt; 
-  <br>&lt;/div&gt; 
-  <br>&lt;/div&gt; 
-  <br>
-  <br>&lt;div class="info-row"&gt; 
-  <br>&lt;div class="info-icon"&gt;📅&lt;/div&gt; 
-  <br>&lt;div class="info-content"&gt; 
-  <br>&lt;div class="info-label"&gt;Fecha&lt;/div&gt; 
-  <br>&lt;div class="info-value"&gt;${audiencia.fecha}&lt;/div&gt; 
-  <br>&lt;/div&gt; 
-  <br>&lt;/div&gt; 
-  <br>
-  <br>&lt;div class="info-row"&gt; 
-  <br>&lt;div class="info-icon"&gt;⏰&lt;/div&gt; 
-  <br>&lt;div class="info-content"&gt; 
-  <br>&lt;div class="info-label"&gt;Hora&lt;/div&gt; 
-  <br>&lt;div class="info-value"&gt;${audiencia.hora}&lt;/div&gt; 
-  <br>&lt;/div&gt; 
-  <br>&lt;/div&gt; 
-  <br>
-  <br>&lt;div class="info-row"&gt; 
-  <br>&lt;div class="info-icon"&gt;🏢&lt;/div&gt; 
-  <br>&lt;div class="info-content"&gt; 
-  <br>&lt;div class="info-label"&gt;Juzgado&lt;/div&gt; 
-  <br>&lt;div class="info-value"&gt;${audiencia.juzgado}&lt;/div&gt; 
-  <br>&lt;/div&gt; 
-  <br>&lt;/div&gt; 
-  <br>
-  <br>${audiencia.linkMeet !== 'No disponible' ? ` 
-  <br>&lt;div class="info-row"&gt; 
-  <br>&lt;div class="info-icon"&gt;🔗&lt;/div&gt; 
-  <br>&lt;div class="info-content"&gt; 
-  <br>&lt;div class="info-label"&gt;Link de Conexión&lt;/div&gt; 
-  <br>&lt;a href="https://${audiencia.linkMeet}" 
-  <br>target="_blank" 
-  <br>class="link-meet"&gt; 
-  <br>📹 Unirse a la audiencia 
-  <br>&lt;/a&gt; 
-  <br>&lt;/div&gt; 
-  <br>&lt;/div&gt; 
-  <br>` : ''} 
-  <br>&lt;/div&gt; 
-  <br>&lt;/div&gt; 
-  <br>`; 
-  <br>}); 
-  <br>
-  <br>resultsDiv.innerHTML = html; 
-  <br>resultsDiv.classList.add('active'); 
-  <br>} 
-  <br>&lt;/script&gt; 
-  <br>&lt;/body&gt; 
-  <br>&lt;/html&gt;
-</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Audiencias - CSJ Tacna</title>
+    <style>
+        /* ============================================
+           ESTILOS DE LA PÁGINA
+           ============================================ */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        #expediente-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        #expediente-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        #buscar-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        #buscar-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        #buscar-btn:active {
+            transform: translateY(0);
+        }
+        
+        #buscar-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results {
+            display: none;
+        }
+        
+        .results.active {
+            display: block;
+        }
+        
+        .error {
+            background: #fee;
+            border-left: 4px solid #f44;
+            padding: 20px;
+            border-radius: 10px;
+            color: #c00;
+        }
+        
+        .success-header {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .success-header h3 {
+            color: #2e7d32;
+            margin-bottom: 5px;
+        }
+        
+        .audiencia-card {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s;
+        }
+        
+        .audiencia-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .audiencia-card h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .audiencia-info {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .info-row {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+        }
+        
+        .info-icon {
+            font-size: 20px;
+            width: 25px;
+        }
+        
+        .info-content {
+            flex: 1;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .info-value {
+            color: #333;
+            font-size: 15px;
+            margin-top: 3px;
+        }
+        
+        .link-meet {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .link-meet:hover {
+            background: #5568d3;
+        }
+        
+        .example {
+            background: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            #buscar-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ENCABEZADO -->
+        <div class="header">
+            <h1>🏛️ Consulta de Audiencias</h1>
+            <p>Corte Superior de Justicia de Tacna - Módulo Penal</p>
+        </div>
+        
+        <!-- BUSCADOR -->
+        <div class="search-box">
+            <input 
+                type="text" 
+                id="expediente-input" 
+                placeholder="Ingresa el número de expediente (Ej: 1480-2023-13)"
+                onkeypress="if(event.key === 'Enter') buscarExpediente()"
+            >
+            <button id="buscar-btn" onclick="buscarExpediente()">
+                🔍 Buscar
+            </button>
+        </div>
+        
+        <!-- INDICADOR DE CARGA -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Buscando en los calendarios...</p>
+        </div>
+        
+        <!-- RESULTADOS -->
+        <div class="results" id="results">
+            <!-- Aquí se mostrarán los resultados -->
+        </div>
+        
+        <!-- EJEMPLOS -->
+        <div class="example">
+            <strong>💡 Formatos aceptados:</strong><br>
+            • 1480-2023-13<br>
+            • EXP.232-2016-55<br>
+            • 0083-2018-12<br>
+            • 3433-2024-3
+        </div>
+    </div>
+
+    <script>
+        /* ============================================
+           CONFIGURACIÓN - ¡IMPORTANTE!
+           ============================================ */
+        
+        // 🔧 PEGA AQUÍ LA URL DE TU WEB APP DE GOOGLE APPS SCRIPT
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyWT9rCJZ1oF72T-Ej252Kor9KTTGoNhal3PGjZKDZNRueAX_U_RtjrEC6owaXPLLxhrw/exec';
+        
+        /* ============================================
+           FUNCIÓN PRINCIPAL: BUSCAR EXPEDIENTE
+           ============================================ */
+        
+        async function buscarExpediente() {
+            // Obtiene el valor del input
+            const expediente = document.getElementById('expediente-input').value.trim();
+            
+            // Valida que no esté vacío
+            if (!expediente) {
+                mostrarError('⚠️ Por favor ingresa un número de expediente');
+                return;
+            }
+            
+            // Muestra loading, oculta resultados
+            document.getElementById('loading').classList.add('active');
+            document.getElementById('results').classList.remove('active');
+            document.getElementById('buscar-btn').disabled = true;
+            
+            try {
+                // Hace la petición a la API
+                const response = await fetch(`${API_URL}?expediente=${encodeURIComponent(expediente)}`);
+                const data = await response.json();
+                
+                // Oculta loading
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('buscar-btn').disabled = false;
+                
+                // Muestra resultados
+                if (data.error) {
+                    mostrarError(data.mensaje, data.sugerencia);
+                } else {
+                    mostrarResultados(data);
+                }
+                
+            } catch (error) {
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('buscar-btn').disabled = false;
+                mostrarError('❌ Error de conexión. Verifica tu internet e intenta nuevamente.');
+                console.error('Error:', error);
+            }
+        }
+        
+        /* ============================================
+           FUNCIÓN: MOSTRAR ERROR
+           ============================================ */
+        
+        function mostrarError(mensaje, sugerencia = '') {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="error">
+                    <strong>${mensaje}</strong>
+                    ${sugerencia ? `<p style="margin-top: 10px; font-size: 14px;">${sugerencia}</p>` : ''}
+                </div>
+            `;
+            resultsDiv.classList.add('active');
+        }
+        
+        /* ============================================
+           FUNCIÓN: MOSTRAR RESULTADOS
+           ============================================ */
+        
+        function mostrarResultados(data) {
+            const resultsDiv = document.getElementById('results');
+            
+            let html = `
+                <div class="success-header">
+                    <h3>✅ Expediente: ${data.expediente}</h3>
+                    <p>${data.total} audiencia(s) encontrada(s) en los próximos 30 días</p>
+                </div>
+            `;
+            
+            // Genera tarjetas para cada audiencia
+            data.audiencias.forEach((audiencia, index) => {
+                html += `
+                    <div class="audiencia-card">
+                        <h4>Audiencia ${index + 1}</h4>
+                        <div class="audiencia-info">
+                            <div class="info-row">
+                                <div class="info-icon">📋</div>
+                                <div class="info-content">
+                                    <div class="info-label">Expediente</div>
+                                    <div class="info-value">${audiencia.expediente}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-row">
+                                <div class="info-icon">📅</div>
+                                <div class="info-content">
+                                    <div class="info-label">Fecha</div>
+                                    <div class="info-value">${audiencia.fecha}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-row">
+                                <div class="info-icon">⏰</div>
+                                <div class="info-content">
+                                    <div class="info-label">Hora</div>
+                                    <div class="info-value">${audiencia.hora}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-row">
+                                <div class="info-icon">🏢</div>
+                                <div class="info-content">
+                                    <div class="info-label">Juzgado</div>
+                                    <div class="info-value">${audiencia.juzgado}</div>
+                                </div>
+                            </div>
+                            
+                            ${audiencia.linkMeet !== 'No disponible' ? `
+                                <div class="info-row">
+                                    <div class="info-icon">🔗</div>
+                                    <div class="info-content">
+                                        <div class="info-label">Link de Conexión</div>
+                                        <a href="https://${audiencia.linkMeet}" 
+                                           target="_blank" 
+                                           class="link-meet">
+                                            📹 Unirse a la audiencia
+                                        </a>
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultsDiv.innerHTML = html;
+            resultsDiv.classList.add('active');
+        }
+    </script>
+</body>
+</html>
